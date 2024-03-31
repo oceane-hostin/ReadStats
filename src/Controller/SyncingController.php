@@ -40,7 +40,7 @@ class SyncingController extends AbstractController
         9 => "septembre",
         10 => "octobre",
         11 => "novembre",
-        12 => "decembre"
+        12 => "décembre"
     ];
 
     const JSON_KEY_YEAR_DATA = "details";
@@ -129,18 +129,24 @@ class SyncingController extends AbstractController
 
                                 // create and/or affect tags to book
                                 if ($existingBook->getTagCollection()->count() == 0) {
+                                    $isManga = false;
                                     $needSaveBook = true;
                                     foreach ($reading[self::JSON_KEY_BOOK][self::JSON_KEY_BOOK_TAGS] as $tagData) {
                                         $tagExternalId = $tagData[self::JSON_KEY_BOOK_TAG_ID];
-                                        $existingTag = $this->_tagRepository->findOneByExternalId($tagExternalId);
-                                        if (empty($existingTag)) {
-                                            $existingTag = new Tag();
-                                            $existingTag->setExternalId($tagExternalId)
-                                                ->setName($tagData[self::JSON_KEY_BOOK_TAG_NAME]);
-                                            $this->_entityManager->persist($existingTag);
+                                        if ($tagExternalId == Tag::MANGA_ID) {
+                                            $isManga = true;
+                                        } else {
+                                            $existingTag = $this->_tagRepository->findOneByExternalId($tagExternalId);
+                                            if (empty($existingTag)) {
+                                                $existingTag = new Tag();
+                                                $existingTag->setExternalId($tagExternalId)
+                                                    ->setName($tagData[self::JSON_KEY_BOOK_TAG_NAME]);
+                                                $this->_entityManager->persist($existingTag);
+                                            }
+                                            $existingBook->addTag($existingTag);
+                                            unset($existingTag);
                                         }
-                                        $existingBook->addTag($existingTag);
-                                        unset($existingTag);
+                                        $existingBook->setIsManga($isManga);
                                     }
                                     $this->_entityManager->flush();
                                 }

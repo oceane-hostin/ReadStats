@@ -27,6 +27,9 @@ class Book
     #[ORM\ManyToMany(targetEntity: Author::class)]
     private Collection $author;
 
+    #[ORM\Column(type: "boolean")]
+    private bool $isManga = false;
+
     public function __construct()
     {
         $this->author = new ArrayCollection();
@@ -106,6 +109,18 @@ class Book
     public function removeAuthor(Author $author): static
     {
         $this->author->removeElement($author);
+
+        return $this;
+    }
+
+    public function getIsManga(): bool
+    {
+        return $this->isManga;
+    }
+
+    public function setIsManga(bool $isManga): static
+    {
+        $this->isManga = $isManga;
 
         return $this;
     }

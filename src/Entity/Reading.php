@@ -28,11 +28,11 @@ class Reading
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $endDate = null;
 
-    #[ORM\Column(options: ["default" => 0])]
-    private ?bool $isOwned = null;
+    #[ORM\Column(type: "boolean")]
+    private bool $isOwned = false;
 
-    #[ORM\Column(options: ["default" => 0])]
-    private ?bool $isBorrowed = null;
+    #[ORM\Column(type: "boolean")]
+    private bool $isBorrowed = false;
 
     #[ORM\ManyToOne]
     private ?Book $book = null;
@@ -99,7 +99,7 @@ class Reading
     }
 
 
-    public function isIsOwned(): ?bool
+    public function getIsOwned(): bool
     {
         return $this->isOwned;
     }
@@ -111,7 +111,7 @@ class Reading
         return $this;
     }
 
-    public function isIsBorrowed(): ?bool
+    public function getIsBorrowed(): bool
     {
         return $this->isBorrowed;
     }

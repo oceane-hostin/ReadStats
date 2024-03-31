@@ -21,7 +21,7 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    public function findUserReadingUniqueKey(int $userId)
+    public function findUserReadingUniqueKey(int $userId) : array
     {
         $entityManager = $this->getEntityManager();
 
@@ -33,13 +33,63 @@ class UserRepository extends ServiceEntityRepository
             WHERE u.id = :id'
         )->setParameter('id', $userId);
 
-        $arrayResult = $query->getArrayResult();
+        return $this->_transformQueryResultToSimpleArray($query);
+    }
 
-        if (!empty($arrayResult)) {
-            return array_column($arrayResult, "1");
+    public function getCountDifferentAuthor(int $userId) {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT COUNT(DISTINCT a.id)
+            FROM App\Entity\User u
+            INNER JOIN u.reading r
+            INNER JOIN r.book b
+            INNER JOIN b.author a
+            WHERE u.id = :id'
+        )->setParameter('id', $userId);
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function getCountBooks(int $userId, bool $manga = false) {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT COUNT(b.id)
+            FROM App\Entity\User u
+            INNER JOIN u.reading r
+            INNER JOIN r.book b
+            WHERE u.id = :id
+            AND b.isManga <> :ismanga'
+        )->setParameter('id', $userId)
+        ->setParameter('ismanga', $manga);
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function getAverageReading(int $userId) : int
+    {
+        $entityManager = $this->getEntityManager();
+
+        $sinceYear = date("Y", strtotime(date("Y"). "- 2 years"));
+
+        // why avg count not working ?
+        $query = $entityManager->createQuery(
+            'SELECT COUNT(r.id)
+            FROM App\Entity\User u
+            INNER JOIN u.reading r
+            WHERE u.id = :id
+            AND r.year >= :sinceyear
+            GROUP BY r.month, r.year'
+        )->setParameter('id', $userId)
+            ->setParameter('sinceyear', $sinceYear);
+
+        $countByMonth = $this->_transformQueryResultToSimpleArray($query);
+        if (!empty($countByMonth)) {
+            return array_sum($countByMonth) / count($countByMonth);
         }
 
-        return $arrayResult;
+        return 0;
     }
 
     //    /**
@@ -66,4 +116,15 @@ class UserRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    protected function _transformQueryResultToSimpleArray($query)
+    {
+        $arrayResult = $query->getArrayResult();
+
+        if (!empty($arrayResult)) {
+            return array_column($arrayResult, "1");
+        }
+
+        return $arrayResult;
+    }
 }

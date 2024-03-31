@@ -62,3 +62,7 @@ routes: sf
 
 entity: c=make:entity
 entity: sf
+
+styles: c=tailwind:build --watch
+styles: sf
+

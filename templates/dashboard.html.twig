@@ -1,1 +1,48 @@
-<h1>Hello !</h1>
+{% extends 'base.html.twig' %}
+
+{% block title %}Read Stats Dashboard{% endblock %}
+
+{% block body %}
+    <header class="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none py-5 justify-center">
+        <h1 class="text-center font-bold text-lg">Read Stats Dashboard</h1>
+    </header>
+
+    <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+            <div class="rounded-sm border border-stroke bg-white p-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div>
+                    <span class="text-title-lg block font-bold text-black dark:text-white">
+                        {{ author_number }}
+                    </span>
+                    <span class="text-sm font-light">Auteurs lus</span>
+                </div>
+            </div>
+            <div class="rounded-sm border border-stroke bg-white p-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div>
+                    <span class="text-title-lg block font-bold text-black dark:text-white">
+                        {{ book_number }}
+                    </span>
+                    <span class="text-sm font-light">Romans lus</span>
+                </div>
+            </div>
+            <div class="rounded-sm border border-stroke bg-white p-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div>
+                    <span class="text-title-lg block font-bold text-black dark:text-white">
+                        {{ manga_number }}
+                    </span>
+                    <span class="text-sm font-light">Manga lus</span>
+                </div>
+            </div>
+            <div class="rounded-sm border border-stroke bg-white p-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div>
+                    <span class="text-title-lg block font-bold text-black dark:text-white">
+                        {{ avg_month }} / mois
+                    </span>
+                    <span class="text-sm font-light">en moyenne sur les 2 dernières années</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+{% endblock %}

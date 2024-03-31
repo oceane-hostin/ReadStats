@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
+    const MANGA_ID = 1998;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

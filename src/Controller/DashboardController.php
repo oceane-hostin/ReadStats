@@ -20,7 +20,11 @@ class DashboardController extends AbstractController
     {
         $user = $this->_getUserDashboard();
         return $this->render('dashboard.html.twig', [
-            "username" => $user->getUsername()
+            "username" => $user->getUsername(),
+            "author_number" => $this->_userRepository->getCountDifferentAuthor($user->getId()),
+            "book_number" => $this->_userRepository->getCountBooks($user->getId()),
+            "manga_number" => $this->_userRepository->getCountBooks($user->getId(), true),
+            "avg_month" => $this->_userRepository->getAverageReading($user->getId())
         ]);
     }
 
