@@ -51,7 +51,16 @@ services:
 # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
     # - ./docker/db/data:/var/lib/mysql:rw
 ###< doctrine/doctrine-bundle ###
-
+  phpmyadmin:
+    depends_on:
+      - database
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: database
+      
 volumes:
   caddy_data:
   caddy_config:
