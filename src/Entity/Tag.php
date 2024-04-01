@@ -8,7 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
-    const MANGA_ID = 1998;
+    const MANGA_RELATED_TAG_IDS = [
+        1998, // manga
+        4388, // shonen
+        5685, // seinen
+        3687, // shojo
+    ];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -133,7 +133,7 @@ class SyncingController extends AbstractController
                                     $needSaveBook = true;
                                     foreach ($reading[self::JSON_KEY_BOOK][self::JSON_KEY_BOOK_TAGS] as $tagData) {
                                         $tagExternalId = $tagData[self::JSON_KEY_BOOK_TAG_ID];
-                                        if ($tagExternalId == Tag::MANGA_ID) {
+                                        if (in_array($tagExternalId, Tag::MANGA_RELATED_TAG_IDS)) {
                                             $isManga = true;
                                         } else {
                                             $existingTag = $this->_tagRepository->findOneByExternalId($tagExternalId);
@@ -256,10 +256,5 @@ class SyncingController extends AbstractController
     protected function _convertMonthToNumber(string $month) : int
     {
         return array_search($month, self::MONTH_MAPPING);
-    }
-
-    protected function _getMonthNameFromNumber(int $monthNumber) : string
-    {
-        return self::MONTH_MAPPING[$monthNumber];
     }
 }

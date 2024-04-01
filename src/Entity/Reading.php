@@ -40,6 +40,9 @@ class Reading
     #[ORM\ManyToOne(inversedBy: 'reading')]
     private ?User $user = null;
 
+    #[ORM\Column(type: "boolean")]
+    private bool $isEbook = false;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -140,9 +143,21 @@ class Reading
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function isIsEbook(): bool
+    {
+        return $this->isEbook;
+    }
+
+    public function setIsEbook(bool $isEbook): static
+    {
+        $this->isEbook = $isEbook;
 
         return $this;
     }
