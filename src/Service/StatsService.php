@@ -27,18 +27,37 @@ class StatsService
         return $query->getSingleScalarResult();
     }
 
+    public function getNewDiscoveredAuthor(int $userId) {
+        $query = $this->_entityManager->createQuery(
+            'SELECT SUM(case when r.year = :currentYear then 1 else 0 end) as year_count,
+                SUM(case when r.year <> :currentYear then 1 else 0 end) as before_count
+            FROM App\Entity\User u
+            INNER JOIN u.reading r
+            INNER JOIN r.book b
+            INNER JOIN b.author a
+            WHERE u.id = :id
+            GROUP BY a.id
+            HAVING year_count > 0 AND before_count = 0'
+        )->setParameter('id', $userId)
+        ->setParameter('currentYear', $this->getCurrentYear());
+
+        return count($query->getArrayResult());
+    }
+
     public function getUserBookReadCount(int $userId, bool $manga = false) {
         $query = $this->_entityManager->createQuery(
-            'SELECT COUNT(b.id)
+            'SELECT COUNT(b.id) as total_count,
+                SUM(case when r.year = :currentYear then 1 else 0 end) as year_count
             FROM App\Entity\User u
             INNER JOIN u.reading r
             INNER JOIN r.book b
             WHERE u.id = :id
-            AND b.isManga <> :ismanga'
+            AND b.isManga <> :isManga'
         )->setParameter('id', $userId)
-            ->setParameter('ismanga', $manga);
+        ->setParameter('isManga', $manga)
+        ->setParameter('currentYear', $this->getCurrentYear());
 
-        return $query->getSingleScalarResult();
+        return current($query->getArrayResult());
     }
 
     public function getUserAverageReadCountByMonth(int $userId) : int
@@ -158,6 +177,11 @@ class StatsService
         }
 
         return $this->_sinceYear;
+    }
+
+    protected function getCurrentYear() : string
+    {
+        return date("Y");
     }
 
     protected function _transformQueryResultToSimpleArray($query)

@@ -14,23 +14,32 @@
                     <span class="text-2xl block font-bold text-black dark:text-white">
                         {{ author_number }}
                     </span>
-                    <span class="text-sm font-light">Auteurs lus</span>
+                    <div class="flex justify-between">
+                        <span class="text-sm font-light">Auteurs lus</span>
+                        <span class="text-sm italic font-light">dont {{ new_author_number }} découverts cette année</span>
+                    </div>
                 </div>
             </div>
             <div class="rounded-lg border border-stroke bg-white p-6 shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div>
                     <span class="text-2xl block font-bold text-black dark:text-white">
-                        {{ book_number }}
+                        {{ book_number.total_count }}
                     </span>
-                    <span class="text-sm font-light">Romans lus</span>
+                    <div class="flex justify-between">
+                        <span class="text-sm font-light">Romans lus</span>
+                        <span class="text-sm italic font-light">dont {{ book_number.year_count }} cette année</span>
+                    </div>
                 </div>
             </div>
             <div class="rounded-lg border border-stroke bg-white p-6 shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div>
                     <span class="text-2xl block font-bold text-black dark:text-white">
-                        {{ manga_number }}
+                        {{ manga_number.total_count }}
                     </span>
-                    <span class="text-sm font-light">Manga lus</span>
+                    <div class="flex justify-between">
+                        <span class="text-sm font-light">Manga lus</span>
+                        <span class="text-sm font-light">dont {{ manga_number.year_count }} cette année</span>
+                    </div>
                 </div>
             </div>
             <div class="rounded-lg border border-stroke bg-white p-6 shadow-default dark:border-strokedark dark:bg-boxdark">
