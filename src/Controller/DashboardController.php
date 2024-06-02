@@ -39,7 +39,14 @@ class DashboardController extends AbstractController
             "manga_number" => $this->_statsService->getUserBookReadCount($userId, true),
             "avg_month" => $this->_statsService->getUserAverageReadCountByMonth($userId),
             "history_chart" => $this->_prepareHistoryChart($userId),
-            "authors_top" => $this->_statsService->getUserAuthorsTop($userId, 7),
+            "authors_top_alltime" => $this->_statsService->getUserAuthorsTop($userId, 7),
+            "authors_top_year" => $this->_statsService->getUserAuthorsTop($userId, 7, date("Y")),
+            "authors_top" => $this->_statsService->getUserAuthorsTop(
+                $userId,
+                7,
+                $this->_statsService->getSinceYearStatPeriod()
+            ),
+            "since_year" => $this->_statsService->getSinceYearStatPeriod(),
             "support_chart" => $this->_prepareSupportChart($userId),
             "series_chart" => $this->_prepareSeriesChart($userId),
             "tags_chart" => $this->_prepareTagsChart($userId, 15),

@@ -81,7 +81,8 @@ class SyncingController extends AbstractController
             throw new \Exception("User doesn't exist");
         }
 
-        if ($this->isBookNodeAccountExist()) {
+        // todo website is blocking access see alternative
+        //if ($this->isBookNodeAccountExist()) {
 
             $readingToSave = $this->_getLastUserReading();
             if (!empty($readingToSave)) {
@@ -172,9 +173,9 @@ class SyncingController extends AbstractController
                 }
             }
             $this->_entityManager->flush();
-        } else {
-            throw new \Exception("User is not linked to an booknode account");
-        }
+//        } else {
+//            throw new \Exception("User is not linked to an booknode account");
+//        }
 
         return new Response($readingSynced." reading synced");
     }

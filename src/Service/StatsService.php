@@ -100,19 +100,37 @@ class StatsService
         return $query->getArrayResult();
     }
 
-    public function getUserAuthorsTop(int $userId, int $count = 10)
+    public function getUserAuthorsTop(int $userId, int $count = 10, int $sinceYear = null)
     {
-        $query = $this->_entityManager->createQuery(
-            'SELECT COUNT(b.id) as book_count, a.firstname, a.lastname
+        // todo how i can avoid doing 2 versions
+        if ($sinceYear) {
+            $query = $this->_entityManager->createQuery(
+                'SELECT COUNT(b.id) as book_count, a.firstname, a.lastname
             FROM App\Entity\User u
             INNER JOIN u.reading r
             INNER JOIN r.book b
             INNER JOIN b.author a
             WHERE u.id = :id
             AND b.isManga = false
+            AND r.year >= :sinceyear
             GROUP BY a.id
             ORDER BY book_count DESC'
-        )->setParameter('id', $userId)
+            )->setParameter('sinceyear', $sinceYear);
+        } else {
+            $query = $this->_entityManager->createQuery(
+                'SELECT COUNT(b.id) as book_count, a.firstname, a.lastname
+                FROM App\Entity\User u
+                INNER JOIN u.reading r
+                INNER JOIN r.book b
+                INNER JOIN b.author a
+                WHERE u.id = :id
+                AND b.isManga = false
+                GROUP BY a.id
+                ORDER BY book_count DESC'
+            );
+        }
+
+        $query->setParameter('id', $userId)
         ->setMaxResults($count);
 
         return $query->getArrayResult();
@@ -168,7 +186,7 @@ class StatsService
         return $query->getArrayResult();
     }
 
-    protected function getSinceYearStatPeriod() : int
+    public function getSinceYearStatPeriod() : int
     {
         if(!isset($this->_sinceYear)) {
             $this->_sinceYear = date("Y",
