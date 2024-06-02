@@ -29,6 +29,9 @@ start: build up ## Build and start the containers
 down: ## Stop the docker hub
 	@$(DOCKER_COMP) down --remove-orphans
 
+up-rebuild: ## Refresh creation
+	@$(DOCKER_COMP) up -d --build --force-recreate --remove-orphans
+
 logs: ## Show live logs
 	@$(DOCKER_COMP) logs --tail=0 --follow
 
